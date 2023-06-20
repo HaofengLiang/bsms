@@ -1,9 +1,20 @@
 import RootLayout from "@/components/layout";
-import styles from "@/styles/Home.module.css";
 import { withAuthenticator } from "@aws-amplify/ui-react";
+import { Container } from "@mui/material";
 import Head from "next/head";
+import BusinessInfo from "@/components/business/businessInfo";
 
-function Business({ signOut, user }) {
+export const getServerSideProps = async () => {
+  const res = await fetch("http://localhost:3000/api/businesses");
+  const businesses = await res.json();
+  return {
+    props: {
+      businesses,
+    },
+  };
+};
+
+function Business({ user, businesses }) {
   return (
     <>
       <Head>
@@ -13,13 +24,14 @@ function Business({ signOut, user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <RootLayout>
-        <div>
-          <h1>Home to you buiness management.</h1>
-          <button onClick={() => signOut()}>Sign out</button>
-        </div>
+        <Container>
+          {businesses.map((business) => (
+            <BusinessInfo business={business} />
+          ))}
+        </Container>
       </RootLayout>
     </>
   );
 }
 
-export default withAuthenticator(Business, { includeGreetings: true });
+export default withAuthenticator(Business);
