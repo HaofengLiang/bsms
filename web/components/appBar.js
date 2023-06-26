@@ -1,6 +1,6 @@
 "use client";
-import * as React from "react";
-import Link from "next/link";
+
+// Material UI
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,12 +14,22 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-const pages = ["Business", "Services", "Inventory", "Customers", "Reports"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import React from "react";
+import Link from "next/link";
+import { withAuthenticator } from "@aws-amplify/ui-react";
 
-function ResponsiveAppBar() {
+const pages = ["business"];
+
+function ResponsiveAppBar({ signOut, user }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const settings = [
+    {
+      name: "Logout",
+      onClick: () => signOut(),
+    },
+  ];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -88,9 +98,11 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <Link key={page} href={page}>
+                  <MenuItem>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
@@ -124,8 +136,15 @@ function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" />
+              <IconButton
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleOpenUserMenu(e);
+                  console.log("user", user);
+                }}
+                sx={{ p: 0 }}
+              >
+                <Avatar alt={user.email} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -145,8 +164,8 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.name} onClick={setting.onClick}>
+                  <Typography textAlign="center">{setting.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -156,4 +175,4 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+export default withAuthenticator(ResponsiveAppBar);
