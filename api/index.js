@@ -1,5 +1,6 @@
 import "./config.js";
 import Express from "express";
+import helmet from "helmet";
 import CognitoExpress from "cognito-express";
 import db from "./persistence/index.js";
 import authMiddleware from "./utils/authMiddleware.js";
@@ -24,6 +25,7 @@ const cognitoExpress = new CognitoExpress({
 });
 
 let app = new Express();
+app.use(helmet());
 app.use(authMiddleware);
 app.use(Express.json());
 
@@ -34,7 +36,7 @@ app.post("/business", businessController.save);
 
 const port = process.env.PORT || 4000;
 const server = app.listen(port);
-console.log(`Running a GraphQL API server at http://localhost:${port}/graphql`);
+console.log(`Running a API server at http://localhost:${port}`);
 
 function cleanup() {
   server.close(function () {
