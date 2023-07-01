@@ -140,7 +140,6 @@ function ResponsiveAppBar({ signOut, user }) {
                 onClick={(e) => {
                   e.preventDefault();
                   handleOpenUserMenu(e);
-                  console.log("user", user);
                 }}
                 sx={{ p: 0 }}
               >
