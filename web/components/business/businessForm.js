@@ -36,9 +36,10 @@ export default function BusinessForm({ open, handleClose }) {
     email: "",
     description: "",
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState(undefined);
 
   const handleChange = (e) => {
+    setError(undefined);
     setBusiness({ ...business, [e.target.name]: e.target.value });
   };
 
@@ -46,6 +47,7 @@ export default function BusinessForm({ open, handleClose }) {
     e.preventDefault();
 
     try {
+      setError(undefined);
       const response = await http.post(
         "http://localhost:8080/business",
         business
