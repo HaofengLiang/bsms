@@ -1,7 +1,7 @@
 import "./config.js";
 import Express from "express";
 import helmet from "helmet";
-import CognitoExpress from "cognito-express";
+import cors from "cors";
 import db from "./persistence/index.js";
 import authMiddleware from "./utils/authMiddleware.js";
 import businessController from "./routes/business/businessController.js";
@@ -17,15 +17,13 @@ try {
   process.exit(1);
 }
 
-const cognitoExpress = new CognitoExpress({
-  region: process.env.COGNITO_REGION,
-  cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
-  tokenUse: "id", //Possible Values: access | id
-  // tokenExpiration: 3600000,
-});
+const corsOptions = {
+  origin: ["http://localhost:3000", "https://localhost:3000"],
+};
 
 let app = new Express();
 app.use(helmet());
+app.use(cors(corsOptions));
 app.use(authMiddleware);
 app.use(Express.json());
 
