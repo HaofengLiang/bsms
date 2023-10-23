@@ -30,7 +30,7 @@ function Business({ user }) {
   return (
     <>
       <Head>
-        <title>Buiness Management</title>
+        <title>Business Management</title>
         <meta name="description" content="Manage your business" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
